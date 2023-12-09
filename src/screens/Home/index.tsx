@@ -2,22 +2,21 @@ import { Text, View, TextInput, TouchableOpacity, FlatList, Alert } from 'react-
 import { styles } from './styles'
 import { Participant } from '../../components/Participant'
 
+import { useState } from 'react'
+
 export function Home() {
 
-  const participantes = [
-    'Antonio',
-    'Rodrigo',
-    'Diego',
-  ]
-
+  const [participantes, setParticipantes] = useState<string[]>([])
+  const [participantName, setParticipantName] = useState('')
 
   function handleParticipantAdd() {
     // console.log('Adicionando um novo participante')
+    setParticipantName('')
 
-    if (participantes.includes("Antonio")) {
-      return Alert.alert("Atenção", "Já existe um participante com esse nome na lista de espera!")
+    if (participantes.includes(participantName)) {
+      return Alert.alert("Atenção", `Já existe um participante com o nome: ${participantName} na lista de espera!`)
     }
-
+    setParticipantes(prevState => [...prevState, participantName])
   }
 
   function handleParticipantRemove(name: string) {
@@ -25,14 +24,19 @@ export function Home() {
 
     Alert.alert("Excluir", `Deseja remover o participante: ${name}?`, [
       {
-        text: "Sim",
-        onPress: () => Alert.alert("Mensagem", "Participante removido!")
-      },
-      {
         text: "Não",
         style: "cancel"
-      }
+      },
+      {
+        text: "Sim",
+        onPress: () => removeItemFromParticipantList(name)
+      },
     ])
+  }
+
+  function removeItemFromParticipantList(name: string) {
+    setParticipantes(participantes.filter(participante => participante !== name))
+    Alert.alert("Mensagem", "Participante removido!")
   }
 
   return (
@@ -46,6 +50,8 @@ export function Home() {
           placeholder='Nome do participante'
           placeholderTextColor="#6b6b6b"
           keyboardType='default'
+          onChangeText={(t) => setParticipantName(t)}
+          value={participantName}
         />
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
           <Text style={styles.buttonText}> + </Text>
