@@ -35,7 +35,7 @@ export function Home() {
   }
 
   function removeItemFromParticipantList(name: string) {
-    setParticipantes(participantes.filter(participante => participante !== name))
+    setParticipantes(prevState => prevState.filter(participante => participante !== name))
     Alert.alert("Mensagem", "Participante removido!")
   }
 
@@ -50,7 +50,7 @@ export function Home() {
           placeholder='Nome do participante'
           placeholderTextColor="#6b6b6b"
           keyboardType='default'
-          onChangeText={(t) => setParticipantName(t)}
+          onChangeText={setParticipantName}
           value={participantName}
         />
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
